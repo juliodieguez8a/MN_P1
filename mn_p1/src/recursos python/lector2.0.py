@@ -1,45 +1,59 @@
 # -*- coding: utf-8 -*-
 """
-Created on Sun Oct  9 22:01:12 2016
+Created on Tue Oct 11 22:48:47 2016
 
 @author: Julio
 """
-
 from pylab import *
-from openpyxl import load_workbook, worksheet
 from datetime import datetime
 
 
-wb = load_workbook('Base de datos1 - proyecto No. 1.xlsx', use_iterators=True, data_only=True)
-ws = wb.get_sheet_by_name('Hoja1')
+#listas de datos
+fechas=[]
+ingresos=[]
 
-op=input("Desea cargar base de datos (si/no): ")
-
-if(op=="si"):
-
-    #Guardamos la base de datos en dos listas que comparten indice
-    ingresos=[]
-    fechas=[]
+try:    
+    txt=open('Base_Datos.txt','r')
+except:
+    input("presione enter para ver muchos errores")
+linea=txt.readline()
+while linea!="":
+    #==================================
+    # Obtenemos informacion de la linea
+    #==================================
+    fecha,ingreso=linea.split(",")
     
-    #Definimos zona de datos
-    filas = range(ws.min_row+1, ws.max_row+1)
-    columnas = range(ws.min_column, ws.max_column+1)
+    #FECHA
+    fecha=datetime.strptime(fecha,"%Y-%m-%d").date()
+    fechas.append(fecha)
     
-    print ("Cargando Base de Datos. Por favor espere... ")
-    for fila in filas:
-        #el ingreso se encuentra en segunda columna
-        ingresos.append(ws.cell(row=fila, column=columnas[2]).value)
-        #la fecha se encuentra en primera columna
-        fechas.append(ws.cell(row=fila, column=columnas[1]).value)
+    #INGRESO
+    ingreso=(float)(ingreso)
+    ingresos.append(ingreso)
+    
+    print (fecha,ingreso)
+    linea=txt.readline()
+txt.close()
 
+#OBTENEMOS INFORMACION DE info.txt
+inf=open('info.txt','r')
+f_min=inf.readline().replace("\n","")
+print(f_min)
+f_min=datetime.strptime(f_min,"%Y-%m-%d").date()
+f_max=inf.readline().replace("\n","")
+print(f_max)
+f_max=datetime.strptime(f_max,"%Y-%m-%d").date()
+inf.close()
 
 print ("Se mostraran los ingresos en el intervalo de tiempo seleccionado\n"+
     "la fecha debe encontrarse entre 01/01/2012 y 31/07/2015")
 #Ingreso de fechas limite
-f_min=input("Ingrese fecha de inicio dd/mm/aaaa: ")
-f_min=datetime.strptime(f_min,"%d/%m/%Y")
-f_max=input("Ingrese fecha de final  dd/mm/aaaa: ")
-f_max=datetime.strptime(f_max,"%d/%m/%Y")
+#==============================================================================
+# f_min=input("Ingrese fecha de inicio dd/mm/aaaa: ")
+# f_min=datetime.strptime(f_min,"%d/%m/%Y").date()
+# f_max=input("Ingrese fecha de final  dd/mm/aaaa: ")
+# f_max=datetime.strptime(f_max,"%d/%m/%Y").date()
+#==============================================================================
 
 #determinar el indice de la fechas maxima y minima
 i_min=fechas.index(f_min)
@@ -86,6 +100,7 @@ for i in x:
 # show()
 #==============================================================================
 
+#CREAR FIGURA
 #GRAFICAR
 plot(x,y2)
 #Definir caracteristicas de grafica
@@ -95,4 +110,4 @@ title("ingresos  entre\n"+str(f_min)+" y "+str(f_max))
 xlabel("x")
 ylabel("y")
 
-show()
+savefig('foo.png')
