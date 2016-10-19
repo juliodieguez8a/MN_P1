@@ -53,7 +53,7 @@ inf.close()
 meses_atras=12
 
 #fecha de inicio
-dia=12
+dia=1
 mes=f_proy.month-meses_atras
 anio=f_proy.year
 if (mes<=0):
@@ -65,14 +65,14 @@ f_inicio=f_proy.replace(anio,mes,dia)
 i_inicio=fechas.index(f_inicio)
 
 
-print (f_inicio)
-print (f_inicio-timedelta(days=1))
+#print (f_inicio)
+#print (f_inicio-timedelta(days=1))
 
 #indice de inicio de datos a tomar
 i_inicio=fechas.index(f_inicio)
 
 
-
+#CUANDO LA FECHA ANTERIOR NO ESTA EN LA BASE DE DATOS
 try:
     i_proy=fechas.index(f_proy)-1
 except:
@@ -133,6 +133,36 @@ for i in range (1,meses_atras+1):
         parte=parte/i
         cant=i
 
+#===========================
+meses_adelante=1
+
+#fecha de inicio
+dia=1
+mes=f_proy.month+meses_adelante
+anio=f_proy.year
+if (mes>12):
+    mes=mes-12
+    anio=anio+1
+
+f_ultima=f_proy.replace(anio,mes,dia)
+f_ultima=(f_ultima-timedelta(days=1))
+
+print (f_ultima)
+print (f_ultima.day)
+
+#cant=f_ultima.day
+
+#print (cant)
+#indice de inicio de datos a tomar
+#i_inicio=fechas.index(f_inicio)
+
+
+#print (f_inicio)
+#print (f_inicio-timedelta(days=1))
+
+#==========================
+
+
 #canidad de dias
 parte=(int)(parte)
 print (parte)
@@ -141,6 +171,7 @@ m=[]
 #m[numero de mes][numero de dia]
 for i in range(0,cant):
     m.append(y_ajustado[i*parte:(1+i)*parte])
+        
     
 #mes de resulado
 #suma los 6 meses
@@ -172,18 +203,18 @@ for i in range(0,parte):
     for n in range(0,cant):
         dato+=m[n][i]
         #datos.append(m[n][i])
-    
-    dato=(dato)*factor[dia]/cant
+    #1.03 factor de cresimiento
+    dato=(dato)*factor[dia]*(1.03)/cant
     resultado.append(dato)
     #resultado1.append(dato+desviacion)
     #resultado2.append(dato-desviacion)
     
-    resultado1.append(dato+desviaciones[i]*factor[dia])
-    resultado2.append(dato-desviaciones[i]*factor[dia])
+    resultado1.append(dato+desviaciones[i]*factor[dia]*1.03)
+    resultado2.append(dato-desviaciones[i]*factor[dia]*1.03)
 
 
 
-print (desviaciones)
+#print (desviaciones)
 
 
 #print(resultado)
@@ -241,14 +272,18 @@ grid()
 title("Proyección de ingresos  entre\n"+str(f_proy.month)+"-"+str(f_proy.year))
 xlabel("dia")
 ylabel("ingresos")
-
-
+axis([0, 30, 0, max(resultado1)])
 
 savefig('foo.png')
 
-
-
-
-
-
-#next_month = datetime.datetime(mydate.year + (mydate.month / 12), ((mydate.month % 12) + 1), 1)
+txt=open('DatosMes.txt','w')
+txt.write('dia -- pronostico -- desv.estandar'+'\n')
+for i in range(0,len(resultado)):
+    '{: f};   {: f}'.format(3.14, -3.14)
+    linea='{:2d}'.format(i+1)
+    linea+='  {:{width}.{prec}f}'.format(resultado[i], width=13, prec=2)
+    linea+='{:{width}.{prec}f}\n'.format(desviaciones[i], width=13, prec=2)
+    
+    txt.write(linea)
+    #txt.write(((str)(i+1))+', '+((str)(resultado[i]))+', '+((str)(desviaciones[i]))+'\n')
+txt.close()

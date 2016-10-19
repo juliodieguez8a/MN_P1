@@ -446,6 +446,9 @@ public class interfaz extends javax.swing.JFrame {
         
         //Metodo que coloca la grafica
         colocaGrafica("/recursos python/foo.png");
+        
+        //Metod que ejecuta comando
+        comando_cmd("cmd /c cd src/recursos python && DatosMes.txt");
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jComboBox4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox4ActionPerformed
