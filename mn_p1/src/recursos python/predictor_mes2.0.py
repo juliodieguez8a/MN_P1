@@ -50,10 +50,10 @@ f_proy=datetime.strptime(f_proy,"%Y-%m-%d").date()
 
 inf.close()
 
-meses_atras=6
+meses_atras=12
 
 #fecha de inicio
-dia=1
+dia=12
 mes=f_proy.month-meses_atras
 anio=f_proy.year
 if (mes<=0):
@@ -225,7 +225,7 @@ try:
     plot(range(1,len(resultado1)+1),resultado1)
     plot(range(1,len(resultado2)+1),resultado2)    
     plot(range(1,len(resultado2)+1),y2)
-
+    print(np.corrcoef(y2,resultado))
     
     
     
