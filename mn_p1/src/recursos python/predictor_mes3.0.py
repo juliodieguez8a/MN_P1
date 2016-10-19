@@ -7,7 +7,7 @@ Created on Tue Oct 11 22:48:47 2016
 from pylab import *
 from datetime import datetime, timedelta
 import numpy as np
-    
+
 
 #listas de datos
 fechas=[]
@@ -50,11 +50,9 @@ f_proy=datetime.strptime(f_proy,"%Y-%m-%d").date()
 
 inf.close()
 
-meses_atras=6
-
 #fecha de inicio
 dia=1
-mes=f_proy.month-meses_atras
+mes=f_proy.month-6
 anio=f_proy.year
 if (mes<=0):
     mes=mes+12
@@ -125,77 +123,43 @@ for i in x2:
     
 #print (y_ajustado)
     
+    
 
+    
+parte=(int)(len(y_ajustado)/6)
 
-parte=(int)(len(y_ajustado))
-for i in range (1,meses_atras+1):
-    if parte/i>28 and parte/i<32:
-        parte=parte/i
-        cant=i
-
-#canidad de dias
-parte=(int)(parte)
 print (parte)
 
+#mes de resulado
+#suma los 6 meses
 m=[]
 #m[numero de mes][numero de dia]
 for i in range(0,cant):
     m.append(y_ajustado[i*parte:(1+i)*parte])
-    
-#mes de resulado
-#suma los 6 meses
 
 desviacion=np.std(y_ajustado)
 
 resultado=[]
 resultado1=[]
 resultado2=[]
-
-
-
-#PARA DESVIACION ESTANDAR POR CADA UNO DE LOS DIAS DEL MES
-desviaciones=[]
-
-#parte cantidad de dias
-#cant cantidad de meses
-for n_dia in range (0,parte):
-    datos_dia=[]
-    for n_mes in range(0,cant):
-        datos_dia.append(m[n_mes][n_dia])
-    desviaciones.append(np.std(datos_dia))
-    
-#PARTE cantidad de dias en que se divide
 for i in range(0,parte):
-    #indice de dia de la semana
     dia= (f_proy+timedelta(days=i)).weekday()
-    dato=0
-    for n in range(0,cant):
-        dato+=m[n][i]
-        #datos.append(m[n][i])
-    
-    dato=(dato)*factor[dia]/cant
+    dato=(m1[i]+m2[i]+m3[i]+m4[i]+m5[i]+m6[i])*factor[dia]/6
     resultado.append(dato)
-    #resultado1.append(dato+desviacion)
-    #resultado2.append(dato-desviacion)
-    
-    resultado1.append(dato+desviaciones[i]*factor[dia])
-    resultado2.append(dato-desviaciones[i]*factor[dia])
-
-
-
-print (desviaciones)
-
+    resultado1.append(dato+desviacion)
+    resultado2.append(dato-desviacion)
 
 #print(resultado)
 
 #CREAR FIGURA
 #GRAFICAR
-
+plot(range(1,len(resultado1)+1),resultado1)
+plot(range(1,len(resultado2)+1),resultado2)
 
 try:
     #REAL
     y2=[]
-    x=range (i_proy+1, i_proy+parte+1)
+    x=range (i_proy+1, i_proy+31)
     
     #inicializar variables
     ingreso=0
@@ -204,36 +168,11 @@ try:
     for i in x:
         ingreso_actual=ingresos[i]
         y2.append(ingreso_actual)    
-
-#==============================================================================
-#     e=(minimosCuadrados(y2,resultado))**(1/2)
-#     print (e)    
-#     
-#     print(np.corrcoef(y2,resultado))
-#     e1=[]
-#     e2=[]
-#     print (y2)
-#     for i in range(0,parte):
-#         e1.append(resultado[i]+e)
-#         e2.append(resultado[i]-e)
-#     
-#     plot(range(1,len(resultado1)+1),e1)
-#     plot(range(1,len(resultado2)+1),e2)    
-#==============================================================================
+        
     
-    #GRAFICA DATOS REALES
-    plot(range(1,len(resultado1)+1),resultado1)
-    plot(range(1,len(resultado2)+1),resultado2)    
     plot(range(1,len(resultado2)+1),y2)
-
-    
-    
-    
-    
 except:
     print ("no hay datos reales")
-    plot(range(1,len(resultado1)+1),resultado1)
-    plot(range(1,len(resultado2)+1),resultado2)
 
 #Definir caracteristicas de grafica
 
