@@ -203,7 +203,7 @@ for i in range(0,parte):
     for n in range(0,cant):
         dato+=m[n][i]
         #datos.append(m[n][i])
-    #1.03 factor de cresimiento
+    #1.03 factor de crecimiento
     dato=(dato)*factor[dia]*(1.03)/cant
     resultado.append(dato)
     #resultado1.append(dato+desviacion)
@@ -256,6 +256,9 @@ try:
     plot(range(1,len(resultado1)+1),resultado1)
     plot(range(1,len(resultado2)+1),resultado2)    
     plot(range(1,len(resultado2)+1),y2)
+    correlacion=np.corrcoef(y2,resultado)
+
+    print (correlacion[0][1])
     print(np.corrcoef(y2,resultado))
     
     
@@ -269,17 +272,21 @@ except:
 #Definir caracteristicas de grafica
 
 grid()
-title("Proyección de ingresos  entre\n"+str(f_proy.month)+"-"+str(f_proy.year))
+title("Proyección de ingresos  de:\n"+str(f_proy.month)+"-"+str(f_proy.year))
 xlabel("dia")
 ylabel("ingresos")
-axis([0, 30, 0, max(resultado1)])
+axis([0, 31, 0, max(resultado1)])
 
 savefig('foo.png')
 
 txt=open('DatosMes.txt','w')
+try:
+    txt.write('R^2:{:{width}.{prec}f}\n'.format(correlacion[0][1], width=13, prec=4))
+except:
+    print("no hay datos reales para obtener correlacion")
+
 txt.write('dia -- pronostico -- desv.estandar'+'\n')
 for i in range(0,len(resultado)):
-    '{: f};   {: f}'.format(3.14, -3.14)
     linea='{:2d}'.format(i+1)
     linea+='  {:{width}.{prec}f}'.format(resultado[i], width=13, prec=2)
     linea+='{:{width}.{prec}f}\n'.format(desviaciones[i], width=13, prec=2)
